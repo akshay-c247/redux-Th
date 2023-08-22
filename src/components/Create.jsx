@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createUser } from '../features/UserSlice'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 const Create = () => {
 
 const [user,setUsers]=useState({})
-
+//const allUser = useSelector((state)=>state.app.users)
 const dispatch=useDispatch();
 const navigate=useNavigate();
 
@@ -26,6 +26,9 @@ const handleSubmit =(e)=>{
 
   return (
     <div>
+      <div>
+        <h3 data-testid>Add Your's detail</h3>
+      </div>
     
     <form className='w-50 mx-auto my-5' onSubmit={handleSubmit} >
   <div className="mb-3">

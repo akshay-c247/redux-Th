@@ -55,12 +55,39 @@ export const deleteUser=createAsyncThunk("deleteUser",async (id,{rejectWithValue
 
 });
 
+//updateuser
+export const updateUser = createAsyncThunk("updateUser", async (data,{rejectWithValue}) => {
+  const response = await fetch(
+    `https://64d3363267b2662bf3dbd4be.mockapi.io/redux/${data.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  try {
+    const result=await response.json();
+    return result;
+  } catch (error) {
+    return rejectWithValue(error)
+  }
+});
+
 export const userDetail = createSlice({
   name: "userDetail",
   initialState: {
     users:[],
     loading: false,
     error: null,
+    searchData:[]
+  },
+  reducers: {
+    searchUser: (state, action) => {
+      console.log(action.payload);
+      state.searchData = action.payload;
+    },
   },
     extraReducers:{
         [createUser.pending]:(state)=>{
@@ -102,9 +129,20 @@ export const userDetail = createSlice({
              state.loading=false;
              state.error=action.payload.message;
           },
-
+          [updateUser.pending]:(state)=>{
+            state.loading=true;
+         },
+         [updateUser.fulfilled]:(state,action)=>{
+             state.loading=false;
+             state.users = state.users.map((ele)=> ele.id===action.payload.id ? action.payload : ele)
+          },
+          [updateUser.rejected]:(state,action)=>{
+             state.loading=false;
+             state.error=action.payload.message;
+          },
 
     },
   },
 );
 export default userDetail.reducer;
+export const {searchUser} = userDetail.actions;
